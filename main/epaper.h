@@ -2,7 +2,6 @@
 #ifndef EPAPER_HEADER_019
 #define EPAPER_HEADER_019
 
-#include "imagebuffer.h"
 #include "epd.h"
 
 class ePaper {
@@ -20,7 +19,6 @@ class ePaper {
   static const unsigned char lut_bb_2in9d[52];
 
   private:
-  ImageBuffer m_Buffer;
 
   public:
 

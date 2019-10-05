@@ -2,7 +2,7 @@
 #ifndef IMAGEBUFFER_HEADER_1234
 #define IMAGEBUFFER_HEADER_1234
 
-class ImageBuffer {
+class Buffer {
   private:
   static const int BufferSize = 1024;
   
@@ -11,28 +11,35 @@ class ImageBuffer {
   int  m_WriteIndex;
 
   uint8_t buffer_read() {
-    if(m_WriteIndex > m_ReadIndex) { return m_Data[m_ReadIndex];}
+    if(m_WriteIndex > m_ReadIndex) { return m_Data[m_ReadIndex++];}
     else{ return 0; }
   }
   
   uint8_t buffer_write(uint8_t value) {
-    if(BufferSize > m_WriteIndex) { return m_Data[m_WriteIndex] = value; }
+    if(BufferSize > m_WriteIndex) { return m_Data[m_WriteIndex++] = value; }
     else{ return 0; }
   }
   
   public:
   
   void ClearBuffer(){
-    memset(m_Data, 0x0, BufferSize);
     m_ReadIndex = 0;
     m_WriteIndex = 0;
   }
   
   uint8_t* GetBufferHeadPtr(){ return m_Data; }
+  uint8_t* GetBufferCurrentPtr() { return m_Data + m_ReadIndex; }
+  void ForwardPtr(int byte) { 
+    m_ReadIndex = (m_ReadIndex + byte > m_WriteIndex ? m_WriteIndex : m_ReadIndex + byte); 
+  }
+
+  bool isEmpty() const {
+    return m_ReadIndex >= m_WriteIndex;
+  }
   
   int GetRemainedDataByte() { return m_WriteIndex - m_ReadIndex; }
 
-  uint32_t Read_Byte(int numByte){
+  uint32_t Read_NByte(int numByte){
     if(numByte <= 0 || numByte > 4) {
       return 0;
     }
@@ -44,12 +51,16 @@ class ImageBuffer {
     
     return result;
   }
+  uint8_t Read_Byte() {
+    return Read_NByte(1) & 0xff;
+  }
 
   void WriteByte(uint8_t value) {
     buffer_write(value);
   }
   
-  ImageBuffer(){
+  Buffer(){
+    memset(m_Data, 0x0, BufferSize);
     ClearBuffer();
   }
   
