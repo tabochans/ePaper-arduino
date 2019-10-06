@@ -33,7 +33,7 @@ class Buffer {
     m_ReadIndex = (m_ReadIndex + byte > m_WriteIndex ? m_WriteIndex : m_ReadIndex + byte); 
   }
 
-  bool isEmpty() const {
+  bool IsEmpty() const {
     return m_ReadIndex >= m_WriteIndex;
   }
   

@@ -3,6 +3,7 @@
 #define EPAPER_HEADER_019
 
 #include "epd.h"
+#include "buffer.h"
 
 class ePaper {
   private:
@@ -55,7 +56,11 @@ class ePaper {
     }
   }
   
-  void LoadImage(){
+  void LoadImage(Buffer& buffer, int dataSizeByte) {
+    while(!buffer.IsEmpty()) {
+      uint8_t value = buffer.Read_Byte();
+      EPD_SendData(value);
+    }
   }
   
   void ShowImage(){
